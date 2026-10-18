@@ -8,9 +8,9 @@ An enterprise-grade, multi-agent AI system for **Parking Space Information & Res
 
 A quick screen recording showing the chatbot interaction, administrator approval, and reservation recording in action:
 
-👉 **[▶️ Watch Mini Demo (`docs/demo_recording.mp4`)](docs/demo_recording.mp4)**
+![AeroPark Mini Demo](docs/demo_recording.gif)
 
-<video src="docs/demo_recording.mp4" controls width="100%"></video>
+👉 **[▶️ View Full-Resolution MP4 (`docs/demo_recording.mp4`)](docs/demo_recording.mp4)**
 
 ---
 
