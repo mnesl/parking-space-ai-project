@@ -4,6 +4,16 @@ An enterprise-grade, multi-agent AI system for **Parking Space Information & Res
 
 ---
 
+## 🎥 Mini Demo
+
+A quick screen recording showing the chatbot interaction, administrator approval, and reservation recording in action:
+
+👉 **[▶️ Watch Mini Demo (`docs/demo_recording.mp4`)](docs/demo_recording.mp4)**
+
+<video src="docs/demo_recording.mp4" controls width="100%"></video>
+
+---
+
 ## 🌟 Key Features Across All 4 Stages
 
 | Stage | Module Path | Key Capabilities Implemented |
@@ -64,6 +74,7 @@ parking-space-ai-project/
 │   ├── parking_dynamic.db           # SQLite DB for live spaces, pricing, hours & pending tickets
 │   └── confirmed_reservations.txt   # Stage 3 MCP server output file (Name | Car | Period | Time)
 ├── docs/
+│   ├── demo_recording.mp4           # Mini demo screen recording
 │   ├── STAGE_1_EVALUATION_REPORT.md # Recall@3, Precision@3, Accuracy & Latency report
 │   ├── STAGE_4_LOAD_TEST_REPORT.md  # Multi-threaded concurrency & throughput report
 │   └── AeroPark_AI_Reservation_Chatbot_Presentation.pptx
@@ -91,8 +102,7 @@ parking-space-ai-project/
 │       ├── graph.py                 # Complete 3-node LangGraph workflow pipeline
 │       └── app_ui.py                # Unified Streamlit Dashboard & CLI
 ├── scripts/
-│   ├── load_test.py                 # Stage 4 load & concurrency stress testing suite
-│   └── generate_presentation.py     # Automated PowerPoint (.pptx) presentation generator
+│   └── load_test.py                 # Stage 4 load & concurrency stress testing suite
 └── tests/                           # 16 automated unit & integration tests (>= 2 per module)
     ├── test_sql_store.py
     ├── test_vector_store.py
@@ -165,10 +175,3 @@ $env:PYTHONPATH="."
 .\.venv\Scripts\python.exe scripts/load_test.py
 ```
 Generates [`docs/STAGE_4_LOAD_TEST_REPORT.md`](docs/STAGE_4_LOAD_TEST_REPORT.md).
-
-### 3. Generate the PowerPoint Presentation (`.pptx`)
-```powershell
-$env:PYTHONPATH="."
-.\.venv\Scripts\python.exe scripts/generate_presentation.py
-```
-Generates [`docs/AeroPark_AI_Reservation_Chatbot_Presentation.pptx`](docs/AeroPark_AI_Reservation_Chatbot_Presentation.pptx).
