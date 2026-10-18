@@ -1,0 +1,34 @@
+services:
+  aeropark-ui:
+    build: .
+    container_name: aeropark-langgraph-ui
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    command: streamlit run src/stage4_orchestration/app_ui.py --server.port=8501 --server.address=0.0.0.0
+
+  aeropark-admin-api:
+    build: .
+    container_name: aeropark-stage2-admin-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    command: uvicorn src.stage2_hitl.admin_api:app --host 0.0.0.0 --port 8000
+
+  aeropark-mcp-server:
+    build: .
+    container_name: aeropark-stage3-mcp-server
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    command: uvicorn src.stage3_mcp.mcp_server:app --host 0.0.0.0 --port 8001
+

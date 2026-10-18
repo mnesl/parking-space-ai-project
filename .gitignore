@@ -1,0 +1,17 @@
+# Python & Virtual Environment
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Secrets & Environment Variables
+.env
+
+# Personal Study Notes & Planning (Kept locally, excluded from Git repo)
+PROJECT_PLAN.md
+docs/learning/
+
+# Runtime SQLite DBs (auto-seeded on startup)
+data/*.db
+
