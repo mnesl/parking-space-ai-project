@@ -73,12 +73,12 @@ parking-space-ai-project/
 ├── terraform/                       # Infrastructure as Code (Terraform)
 │   └── main.tf                      # Provisions Pinecone Serverless index
 ├── data/
-│   ├── static_docs/                 # Markdown knowledge base for Pinecone ingestion
-│   │   ├── 01_general_info_and_location.md
-│   │   ├── 02_booking_process_and_policies.md
-│   │   └── 03_internal_sensitive_audit.md
-│   ├── parking_dynamic.db           # SQLite DB for live spaces, pricing, hours & pending tickets
-│   └── confirmed_reservations.txt   # Stage 3 MCP server output file (Name | Car | Period | Time)
+│   └── static_docs/                 # Markdown knowledge base for Pinecone ingestion
+│       ├── 01_general_info_and_location.md
+│       ├── 02_booking_process_and_policies.md
+│       └── 03_internal_sensitive_audit.md
+│   # Note: data/parking_dynamic.db (SQLite) & data/confirmed_reservations.txt (MCP Ledger)
+│   # are automatically generated locally at runtime and excluded via .gitignore.
 ├── docs/
 │   ├── demo_recording.gif           # Auto-playing mini demo GIF for README
 │   ├── demo_recording.mp4           # Mini demo screen recording (MP4)
