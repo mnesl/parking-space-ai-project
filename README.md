@@ -172,7 +172,6 @@ Open `.env` and add your free API keys:
 ### 3. (Optional) Verify & Pre-Index Markdown Documents into Pinecone
 The application automatically indexes `data/static_docs/*.md` on startup, or you can trigger/verify Pinecone ingestion manually:
 ```powershell
-$env:PYTHONPATH="."
 .\.venv\Scripts\python.exe -c "from src.stage1_rag.vector_store import ParkingVectorStore; print('Indexed chunks:', ParkingVectorStore().ingest_documents())"
 ```
 
@@ -182,7 +181,6 @@ $env:PYTHONPATH="."
 
 ### Option A: Launch the Interactive Streamlit Web Dashboard (Recommended)
 ```powershell
-$env:PYTHONPATH="."
 .\.venv\Scripts\streamlit.exe run src/stage4_orchestration/app_ui.py
 ```
 Opens **`http://localhost:8501`** in your browser:
@@ -192,18 +190,15 @@ Opens **`http://localhost:8501`** in your browser:
 
 ### Option B: Run the Interactive Terminal CLI
 ```powershell
-$env:PYTHONPATH="."
 .\.venv\Scripts\python.exe -m src.stage4_orchestration.app_ui --cli
 ```
 
 ### Option C: Launch Stage 2 & Stage 3 FastAPI Swagger UIs (`/docs`)
 ```powershell
 # Stage 2 Admin HITL REST API (http://127.0.0.1:8000/docs)
-$env:PYTHONPATH="."
 .\.venv\Scripts\uvicorn.exe src.stage2_hitl.admin_api:app --port 8000
 
 # Stage 3 MCP Server REST API (http://127.0.0.1:8001/docs)
-$env:PYTHONPATH="."
 .\.venv\Scripts\uvicorn.exe src.stage3_mcp.mcp_server:app --port 8001
 ```
 
@@ -259,20 +254,17 @@ My name is Merve Okcu, car number 34MNO2026, and I want to reserve a space from 
 
 ### 1. Run the Complete Pytest Suite (16 tests across all modules)
 ```powershell
-$env:PYTHONPATH="."
 .\.venv\Scripts\python.exe -m pytest tests/ -v
 ```
 
 ### 2. Run Stage 1 Scientific RAG & Guardrails Evaluation (`Recall@3`, `Precision@3`, Latency)
 ```powershell
-$env:PYTHONPATH="."
 .\.venv\Scripts\python.exe -m src.stage1_rag.evaluation
 ```
 Generates [`docs/STAGE_1_EVALUATION_REPORT.md`](docs/STAGE_1_EVALUATION_REPORT.md).
 
 ### 3. Run Stage 4 Multi-Threaded Concurrency & Load Testing
 ```powershell
-$env:PYTHONPATH="."
 .\.venv\Scripts\python.exe scripts/load_test.py
 ```
 Generates [`docs/STAGE_4_LOAD_TEST_REPORT.md`](docs/STAGE_4_LOAD_TEST_REPORT.md).

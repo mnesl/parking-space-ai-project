@@ -28,11 +28,16 @@ Educational Concepts Covered Here:
 from __future__ import annotations
 
 import statistics
+import sys
 import tempfile
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Callable, List
+
+_PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 
 from pydantic import BaseModel
 
