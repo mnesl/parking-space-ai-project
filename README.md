@@ -2,6 +2,20 @@
 
 An enterprise-grade, multi-agent AI system for **Parking Space Information & Reservation** built with **Python, LangChain, LangGraph, Pinecone Serverless, SQLite, FastAPI, and the Model Context Protocol (MCP)**.
 
+### 🛠️ Technology Stack & How Each Tool Is Used
+
+| Technology | Role in This Project | Where It Is Used |
+| :--- | :--- | :--- |
+| **Google Gemini / OpenAI (`langchain-google-genai`, `langchain-openai`)** | Provider-agnostic LLM & Embeddings Factory (`gemini-3.1-flash-lite` + `models/gemini-embedding-001` or `gpt-4o-mini` + `text-embedding-3-small`) for RAG synthesis, slot extraction, and Admin briefings. | [`src/config.py`](src/config.py) |
+| **Pinecone Serverless (`pinecone`)** | Cloud vector database storing chunked static facility documentation (`location`, `height rules`, `EV chargers`, `policies`) with metadata filtering (`is_public=True`). | [`src/stage1_rag/vector_store.py`](src/stage1_rag/vector_store.py) |
+| **SQLite (`sqlite3` + WAL Mode)** | Transactional relational database storing dynamic parking state (live available spaces per zone, hourly/daily pricing, working hours) and asynchronous Stage 2 `PENDING` admin tickets. | [`src/stage1_rag/sql_store.py`](src/stage1_rag/sql_store.py), [`src/stage2_hitl/admin_agent.py`](src/stage2_hitl/admin_agent.py) |
+| **LangChain (`langchain-core`, `langchain-text-splitters`)** | Powers `RecursiveCharacterTextSplitter` chunking, Agent 1 (Customer RAG & interactive slot collector), and Agent 2 (`AdminEscalationAgent` executive briefing generator). | [`src/stage1_rag/chatbot_agent.py`](src/stage1_rag/chatbot_agent.py), [`src/stage2_hitl/admin_agent.py`](src/stage2_hitl/admin_agent.py) |
+| **LangGraph (`langgraph`)** | Stateful 3-node workflow orchestrator (`user_interaction` $\rightarrow$ `admin_approval` $\rightarrow$ `data_recording`) with conditional routing and `MemorySaver` thread checkpointing. | [`src/stage4_orchestration/graph.py`](src/stage4_orchestration/graph.py), [`src/stage4_orchestration/state.py`](src/stage4_orchestration/state.py) |
+| **Model Context Protocol (`mcp` / `FastMCP`)** | Standardized MCP Server & Client exposing the `write_confirmed_reservation` tool to record approved bookings to `data/confirmed_reservations.txt` with `threading.Lock()` safety. | [`src/stage3_mcp/mcp_server.py`](src/stage3_mcp/mcp_server.py), [`src/stage3_mcp/mcp_client.py`](src/stage3_mcp/mcp_client.py) |
+| **FastAPI & Pydantic (`fastapi`, `pydantic`)** | Strict data validation (`ReservationDraft`, delimiter-injection blockers) and authenticated REST microservices (`X-Admin-Api-Key`, `X-MCP-Api-Key`) for Stage 2 HITL and Stage 3 MCP HTTP transport. | [`src/stage2_hitl/admin_api.py`](src/stage2_hitl/admin_api.py), [`src/stage3_mcp/mcp_server.py`](src/stage3_mcp/mcp_server.py) |
+| **Streamlit (`streamlit`)** | Unified 3-view interactive web dashboard (Customer Chat, Admin Approval Portal, and Live MCP Ledger & SQLite Inspector). | [`src/stage4_orchestration/app_ui.py`](src/stage4_orchestration/app_ui.py) |
+| **Pytest, Docker, GitHub Actions & Terraform** | 16 automated unit/integration tests, multi-threaded load testing, containerized deployment, CI pipeline, and Pinecone Serverless Infrastructure-as-Code. | [`tests/`](tests), [`scripts/load_test.py`](scripts/load_test.py), [`.github/workflows/ci.yml`](.github/workflows/ci.yml), [`terraform/main.tf`](terraform/main.tf) |
+
 ---
 
 ## 🎥 Mini Demo
