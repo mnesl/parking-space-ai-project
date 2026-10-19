@@ -1,4 +1,4 @@
-# AeroPark Smart Garage — General Information, Location & Rules
+# AeroPark Smart Garage - General Information, Location & Rules
 
 ## 1. Facility Overview
 Welcome to **AeroPark Smart Garage**, a multi-level automated parking facility located in the heart of the Downtown Tech District. Our garage offers 24/7 security monitoring, license plate recognition (LPR) at entry and exit gates, covered weather-protected stalls, and high-speed Level 2 electric vehicle (EV) charging stations.

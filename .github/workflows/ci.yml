@@ -1,4 +1,4 @@
-name: AeroPark AI Chatbot — CI Pipeline
+name: AeroPark AI Chatbot - CI Pipeline
 
 on:
   push:

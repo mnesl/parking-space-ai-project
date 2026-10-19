@@ -1,4 +1,4 @@
-# AeroPark Smart Garage — Booking Process, Policies & FAQ
+# AeroPark Smart Garage - Booking Process, Policies & FAQ
 
 ## 1. How the Interactive Reservation Process Works
 Reserving a parking space through the AeroPark AI Chatbot is a fast, 3-step process:
@@ -6,9 +6,9 @@ Reserving a parking space through the AeroPark AI Chatbot is a fast, 3-step proc
 ### Step 1: Provide Your Reservation Details to the Chatbot
 To initiate a booking, please provide the following **4 required pieces of information**:
 1. **First Name and Surname** (e.g., `Merve Okcu`).
-2. **Car Number / License Plate** (e.g., `34ABC123` — alphanumeric uppercase format without spaces).
+2. **Car Number / License Plate** (e.g., `34ABC123` - alphanumeric uppercase format without spaces).
 3. **Reservation Period** (start date/time and end date/time, e.g., `2026-10-20 09:00 to 2026-10-20 18:00`).
-4. **Preferred Zone** (optional — defaults to `Zone A Standard` if not specified; `Zone B EV` and `Zone C VIP` are also available).
+4. **Preferred Zone** (optional - defaults to `Zone A Standard` if not specified; `Zone B EV` and `Zone C VIP` are also available).
 
 ### Step 2: Human Administrator Confirmation (Human-in-the-Loop)
 For security and capacity verification, every reservation request collected by the chatbot is automatically escalated to an **AeroPark Human Administrator**.

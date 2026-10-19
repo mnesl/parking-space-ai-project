@@ -49,7 +49,7 @@ def create_admin_app(
     agent = admin_agent or AdminEscalationAgent(settings=cfg)
 
     app = FastAPI(
-        title="AeroPark Stage 2 — Human-in-the-Loop Administrator API",
+        title="AeroPark Stage 2 - Human-in-the-Loop Administrator API",
         description=(
             "REST API allowing Agent 1 (Chatbot) to escalate reservation requests "
             "and allowing the Human Administrator to CONFIRM or REFUSE them."

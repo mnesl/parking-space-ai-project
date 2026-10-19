@@ -240,7 +240,7 @@ def create_mcp_fastapi_app(
     proc = processor or ReservationMCPFileProcessor(settings=cfg)
 
     app = FastAPI(
-        title="AeroPark Stage 3 — Secure MCP Reservation Server",
+        title="AeroPark Stage 3 - Secure MCP Reservation Server",
         description=(
             "Processes confirmed reservations from Stage 2 and writes them to storage "
             "in the format: Name | Car Number | Reservation Period | Approval Time."

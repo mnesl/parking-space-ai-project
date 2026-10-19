@@ -317,7 +317,7 @@ class ParkingRAGChatbot:
         start_time = time.perf_counter()
 
         # ------------------------------------------------------------------
-        # STEP 1: Wall #1 — Input Guardrail (Block Prompt Injection / PII Probes)
+        # STEP 1: Wall #1 - Input Guardrail (Block Prompt Injection / PII Probes)
         # ------------------------------------------------------------------
         input_check = self.guardrail.inspect_user_input(user_message)
         if not input_check.is_safe:
@@ -385,7 +385,7 @@ class ParkingRAGChatbot:
         )
 
         # ------------------------------------------------------------------
-        # STEP 6: Wall #3 — Output Guardrail (Final PII Scrubbing)
+        # STEP 6: Wall #3 - Output Guardrail (Final PII Scrubbing)
         # ------------------------------------------------------------------
         output_check = self.guardrail.redact_sensitive_text(raw_reply)
         final_reply = output_check.sanitized_text

@@ -6,7 +6,7 @@ Specification Requirement:
 "4. Implement guard rails mechanism. Add a filtering to prevent exposure of
 sensitive data (e.g., using pre-trained NLP models for text analysis)."
 
-Educational Concept — "Defense in Depth" (The 3 Security Walls):
+Educational Concept - "Defense in Depth" (The 3 Security Walls):
 ----------------------------------------------------------------
 In production AI Engineering, you NEVER rely on just telling the LLM "please don't
 share secrets" (because hackers use Prompt Injection to bypass system prompts!).

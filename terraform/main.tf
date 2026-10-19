@@ -1,5 +1,5 @@
 # ============================================================================
-# Infrastructure as Code (Terraform) — AeroPark AI Reservation System
+# Infrastructure as Code (Terraform) - AeroPark AI Reservation System
 # Provisions:
 #   1. Pinecone Serverless Vector Index (`parking-knowledge-base`)
 #   2. Containerized Application Service configuration

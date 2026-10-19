@@ -241,7 +241,7 @@ class AdminEscalationAgent:
     ) -> str:
         """Use Agent 2's LangChain LLM (or deterministic template offline) to format the Admin notification."""
         raw_summary = (
-            f"[ADMIN APPROVAL REQUIRED — Ticket {request_id}]\n"
+            f"[ADMIN APPROVAL REQUIRED - Ticket {request_id}]\n"
             f"- Customer: {draft.full_name}\n"
             f"- Car Number: {draft.car_number}\n"
             f"- Period: {draft.reservation_period}\n"

@@ -78,7 +78,7 @@ def run_cli_demo() -> None:
     orch = build_default_orchestrator()
     thread_id = "cli-demo-session"
     print("=" * 72)
-    print("🚗 AeroPark Smart Garage — Stage 4 LangGraph Interactive CLI")
+    print("🚗 AeroPark Smart Garage - Stage 4 LangGraph Interactive CLI")
     print("Type 'exit' to quit, or 'admin' to review pending reservations.")
     print("=" * 72)
 
@@ -193,10 +193,10 @@ def run_streamlit_app() -> None:
         st.divider()
         st.markdown("**📋 Current Reservation Slots**")
         draft = orch.chatbot.reservation_draft
-        st.caption(f"• **Name:** `{draft.name or '—'}`")
-        st.caption(f"• **Surname:** `{draft.surname or '—'}`")
-        st.caption(f"• **Car Number:** `{draft.car_number or '—'}`")
-        st.caption(f"• **Period:** `{draft.reservation_period or '—'}`")
+        st.caption(f"• **Name:** `{draft.name or '-'}`")
+        st.caption(f"• **Surname:** `{draft.surname or '-'}`")
+        st.caption(f"• **Car Number:** `{draft.car_number or '-'}`")
+        st.caption(f"• **Period:** `{draft.reservation_period or '-'}`")
         st.caption(f"• **Zone:** `{draft.zone_code}`")
 
         if st.button("🔄 Reset Conversation", use_container_width=True):
@@ -213,7 +213,7 @@ def run_streamlit_app() -> None:
     # VIEW 1: NORMAL CUSTOMER CHAT (Messages on Top, Input Box at Bottom!)
     # ------------------------------------------------------------------
     if view_mode.startswith("💬"):
-        st.markdown("# 💬 AeroPark Smart Garage — AI Assistant")
+        st.markdown("# 💬 AeroPark Smart Garage - AI Assistant")
         st.caption(
             "Stage 1 Hybrid RAG (Pinecone + SQLite) • 3-Wall Security Guardrails • Interactive Slot Collector"
         )
@@ -255,7 +255,7 @@ def run_streamlit_app() -> None:
             st.info("No pending reservation requests awaiting approval right now.")
         for t in pending_tickets:
             with st.container(border=True):
-                st.markdown(f"**Ticket `{t.request_id}`** — Created at `{t.created_at}`")
+                st.markdown(f"**Ticket `{t.request_id}`** - Created at `{t.created_at}`")
                 st.code(t.admin_briefing, language="text")
                 notes = st.text_input(
                     f"Optional Admin Notes ({t.request_id})",
