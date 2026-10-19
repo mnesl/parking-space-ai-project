@@ -250,23 +250,34 @@ class AdminEscalationAgent:
         )
 
         active_llm = self.llm
-        if active_llm is None:
+        if active_llm is None and not self.settings.use_local_vector_fallback:
             has_key = (
-                self.settings.llm_provider == "gemini" and bool(self.settings.google_api_key)
+                self.settings.llm_provider == "gemini"
+                and bool(self.settings.google_api_key)
+                and not self.settings.google_api_key.startswith("your_")
             ) or (
-                self.settings.llm_provider == "openai" and bool(self.settings.openai_api_key)
+                self.settings.llm_provider == "openai"
+                and bool(self.settings.openai_api_key)
+                and not self.settings.openai_api_key.startswith("your_")
             )
             if has_key:
                 active_llm = get_chat_model(temperature=0.0, settings=self.settings)
 
         if active_llm is not None:
-            response = active_llm.invoke(
-                [
-                    SystemMessage(content=ADMIN_AGENT_SYSTEM_PROMPT),
-                    HumanMessage(content=raw_summary),
-                ]
-            )
-            return str(response.content)
+            from src.config import extract_llm_text
+
+            try:
+                response = active_llm.invoke(
+                    [
+                        SystemMessage(content=ADMIN_AGENT_SYSTEM_PROMPT),
+                        HumanMessage(content=raw_summary),
+                    ]
+                )
+                text = extract_llm_text(response.content)
+                if text:
+                    return text
+            except Exception:
+                pass
 
         return raw_summary
 

@@ -12,6 +12,7 @@ __pycache__/
 PROJECT_PLAN.md
 docs/learning/
 
-# Runtime SQLite DBs (auto-seeded on startup)
+# Runtime SQLite DBs & Local MCP Ledger (auto-created at runtime)
 data/*.db
+data/confirmed_reservations.txt
 

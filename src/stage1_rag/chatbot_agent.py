@@ -419,18 +419,24 @@ class ParkingRAGChatbot:
         collected_str = self.reservation_draft.model_dump_json()
         missing_str = ", ".join(missing) if missing else "NONE (All 4 fields collected!)"
 
-        # Try active LLM if injected or if API key is present in .env
+        # Try active LLM if injected or if live mode is enabled with an API key
         active_llm = self.llm
-        if active_llm is None:
+        if active_llm is None and not self.settings.use_local_vector_fallback:
             has_key = (
-                self.settings.llm_provider == "gemini" and bool(self.settings.google_api_key)
+                self.settings.llm_provider == "gemini"
+                and bool(self.settings.google_api_key)
+                and not self.settings.google_api_key.startswith("your_")
             ) or (
-                self.settings.llm_provider == "openai" and bool(self.settings.openai_api_key)
+                self.settings.llm_provider == "openai"
+                and bool(self.settings.openai_api_key)
+                and not self.settings.openai_api_key.startswith("your_")
             )
             if has_key:
                 active_llm = get_chat_model(temperature=0.0, settings=self.settings)
 
         if active_llm is not None:
+            from src.config import extract_llm_text
+
             system_msg = SystemMessage(
                 content=SYSTEM_PROMPT_TEMPLATE.format(
                     static_context=static_context,
@@ -440,8 +446,15 @@ class ParkingRAGChatbot:
                 )
             )
             messages = [system_msg, *self.chat_history[-6:], HumanMessage(content=user_message)]
-            response = active_llm.invoke(messages)
-            return str(response.content)
+            try:
+                response = active_llm.invoke(messages)
+                text = extract_llm_text(response.content)
+                if text:
+                    return text
+            except Exception:
+                # Graceful resilience: if cloud LLM returns 503 High Demand / 429 Rate Limit,
+                # synthesize directly from live Pinecone chunks + live SQLite context below.
+                pass
 
         # Grounded synthesis fallback (used when running tests without external API keys)
         if self.reservation_draft.is_complete:

@@ -162,17 +162,21 @@ class ParkingVectorStore:
         embedding dimension (768 for Gemini, 1536 for OpenAI) if it doesn't exist,
         and upsert all document chunks with deterministic IDs.
         """
-        from langchain_pinecone import PineconeVectorStore
         from pinecone import Pinecone, ServerlessSpec
 
         pc = Pinecone(api_key=self.settings.pinecone_api_key)
         index_name = self.settings.pinecone_index_name
         existing_indexes = [idx.name for idx in pc.list_indexes()]
 
+        emb = self._ensure_embeddings()
+        texts = [c.page_content for c in chunks]
+        vectors = emb.embed_documents(texts)
+        actual_dim = len(vectors[0]) if vectors else self.settings.embedding_dimension
+
         if index_name not in existing_indexes:
             pc.create_index(
                 name=index_name,
-                dimension=self.settings.embedding_dimension,
+                dimension=actual_dim,
                 metric="cosine",
                 spec=ServerlessSpec(
                     cloud=self.settings.pinecone_cloud,
@@ -180,15 +184,20 @@ class ParkingVectorStore:
                 ),
             )
 
-        emb = self._ensure_embeddings()
-        ids = [c.metadata["chunk_id"] for c in chunks]
-        self._pinecone_vectorstore = PineconeVectorStore.from_documents(
-            documents=chunks,
-            embedding=emb,
-            index_name=index_name,
-            ids=ids,
-            pinecone_api_key=self.settings.pinecone_api_key,
-        )
+        index = pc.Index(index_name)
+        records = []
+        for chunk, vec in zip(chunks, vectors):
+            meta = dict(chunk.metadata)
+            meta["text"] = chunk.page_content
+            records.append(
+                {
+                    "id": str(chunk.metadata["chunk_id"]),
+                    "values": vec,
+                    "metadata": meta,
+                }
+            )
+        index.upsert(vectors=records)
+        self._pinecone_vectorstore = index
 
     def _ingest_into_local_memory(self, chunks: List[Document]) -> None:
         """Embed chunks into memory using the active Embeddings model."""
@@ -214,19 +223,38 @@ class ParkingVectorStore:
         )
 
         if self.uses_pinecone_cloud:
-            from langchain_pinecone import PineconeVectorStore
+            from pinecone import Pinecone
 
             if self._pinecone_vectorstore is None:
-                self._pinecone_vectorstore = PineconeVectorStore(
-                    index_name=self.settings.pinecone_index_name,
-                    embedding=self._ensure_embeddings(),
-                    pinecone_api_key=self.settings.pinecone_api_key,
+                pc = Pinecone(api_key=self.settings.pinecone_api_key)
+                self._pinecone_vectorstore = pc.Index(
+                    self.settings.pinecone_index_name
                 )
-            return self._pinecone_vectorstore.similarity_search(
-                query=query,
-                k=k,
-                filter=metadata_filter,
-            )
+
+            emb = self._ensure_embeddings()
+            query_vec = emb.embed_query(query)
+            try:
+                response = self._pinecone_vectorstore.query(
+                    vector=query_vec,
+                    top_k=k,
+                    include_metadata=True,
+                    filter=metadata_filter,
+                )
+            except Exception:
+                self.ingest_documents()
+                response = self._pinecone_vectorstore.query(
+                    vector=query_vec,
+                    top_k=k,
+                    include_metadata=True,
+                    filter=metadata_filter,
+                )
+
+            docs: List[Document] = []
+            for match in response.get("matches", []):
+                meta = dict(match.get("metadata", {}))
+                text = str(meta.pop("text", ""))
+                docs.append(Document(page_content=text, metadata=meta))
+            return docs
 
         # Local in-memory cosine similarity search with metadata filtering
         if not self._local_chunks:

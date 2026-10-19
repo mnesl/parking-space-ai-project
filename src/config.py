@@ -47,9 +47,11 @@ class Settings(BaseSettings):
 
     # Google Gemini configuration
     google_api_key: str = Field(default="", alias="GOOGLE_API_KEY")
-    gemini_chat_model: str = Field(default="gemini-2.5-flash", alias="GEMINI_CHAT_MODEL")
+    gemini_chat_model: str = Field(
+        default="gemini-3.1-flash-lite", alias="GEMINI_CHAT_MODEL"
+    )
     gemini_embedding_model: str = Field(
-        default="models/text-embedding-004", alias="GEMINI_EMBEDDING_MODEL"
+        default="models/gemini-embedding-001", alias="GEMINI_EMBEDDING_MODEL"
     )
 
     # OpenAI configuration
@@ -85,7 +87,7 @@ class Settings(BaseSettings):
     def embedding_dimension(self) -> int:
         """
         Return the exact vector dimension produced by the active embedding model.
-        - Google `models/text-embedding-004`: 768 dimensions
+        - Google `models/gemini-embedding-001`: 3072 dimensions (or auto-detected)
         - OpenAI `text-embedding-3-small`: 1536 dimensions
         """
         if self.llm_provider == "gemini":
@@ -121,6 +123,8 @@ def get_chat_model(
             model=cfg.gemini_chat_model,
             google_api_key=cfg.google_api_key,
             temperature=temperature,
+            timeout=8.0,
+            max_retries=0,
         )
 
     if cfg.llm_provider == "openai":
@@ -146,7 +150,7 @@ def get_embeddings(settings: Settings | None = None) -> Embeddings:
     if cfg.llm_provider == "gemini":
         if not cfg.google_api_key:
             raise ValueError(
-                "GOOGLE_API_KEY is missing! Needed for Google text-embedding-004."
+                "GOOGLE_API_KEY is missing! Needed for Google gemini-embedding-001."
             )
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
@@ -166,4 +170,23 @@ def get_embeddings(settings: Settings | None = None) -> Embeddings:
         )
 
     raise ValueError(f"Unsupported LLM_PROVIDER: {cfg.llm_provider}")
+
+
+def extract_llm_text(content: object) -> str:
+    """
+    Normalize LangChain `AIMessage.content` into a clean string.
+    Handles both plain strings and Gemini 3.x structured content blocks
+    (`[{"type": "text", "text": "..."}]`).
+    """
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for item in content:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict) and "text" in item:
+                parts.append(str(item["text"]))
+        return "\n".join(p for p in parts if p).strip()
+    return str(content)
 

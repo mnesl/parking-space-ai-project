@@ -232,13 +232,14 @@ def run_streamlit_app() -> None:
             with st.chat_message("user"):
                 st.markdown(user_prompt)
 
-            state = orch.send_user_message(
-                user_prompt, thread_id=st.session_state.thread_id
-            )
-            reply = _format_clean_chat_text(state.get("bot_reply", ""))
-            st.session_state.messages.append({"role": "assistant", "content": reply})
             with st.chat_message("assistant"):
+                with st.spinner("Searching Pinecone & generating response..."):
+                    state = orch.send_user_message(
+                        user_prompt, thread_id=st.session_state.thread_id
+                    )
+                    reply = _format_clean_chat_text(state.get("bot_reply", ""))
                 st.markdown(reply)
+            st.session_state.messages.append({"role": "assistant", "content": reply})
             st.rerun()
 
     # ------------------------------------------------------------------
